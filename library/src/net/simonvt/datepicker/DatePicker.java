@@ -16,9 +16,6 @@
 
 package net.simonvt.datepicker;
 
-import net.simonvt.calendarview.CalendarView;
-import net.simonvt.numberpicker.NumberPicker;
-
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -41,10 +38,11 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import net.simonvt.calendarview.CalendarView;
+import net.simonvt.numberpicker.NumberPicker;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -384,19 +382,22 @@ public class DatePicker extends FrameLayout {
 
     @Override
     public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
-        onPopulateAccessibilityEvent(event);
+		populateAccessibilityEvent(event);
         return true;
     }
 
     @Override
     public void onPopulateAccessibilityEvent(AccessibilityEvent event) {
         super.onPopulateAccessibilityEvent(event);
-
-        final int flags = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR;
-        String selectedDateUtterance = DateUtils.formatDateTime(getContext(),
-                mCurrentDate.getTimeInMillis(), flags);
-        event.getText().add(selectedDateUtterance);
+		populateAccessibilityEvent(event);
     }
+
+	private void populateAccessibilityEvent(AccessibilityEvent event) {
+		final int flags = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR;
+		String selectedDateUtterance = DateUtils.formatDateTime(getContext(),
+				mCurrentDate.getTimeInMillis(), flags);
+		event.getText().add(selectedDateUtterance);
+	}
 
     @Override
     public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
