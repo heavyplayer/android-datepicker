@@ -75,6 +75,7 @@ public class DatePicker extends FrameLayout {
     private static final String LOG_TAG = DatePicker.class.getSimpleName();
 
     private static final String DATE_FORMAT = "MM/dd/yyyy";
+    private static final String SHORT_MONTH_FORMAT = "MMM";
 
     private static final int DEFAULT_START_YEAR = 1900;
 
@@ -108,7 +109,8 @@ public class DatePicker extends FrameLayout {
 
     private String[] mShortMonths;
 
-    private final java.text.DateFormat mDateFormat = new SimpleDateFormat(DATE_FORMAT);
+    private java.text.DateFormat mDateFormat;
+    private java.text.DateFormat mShortMonthFormat;
 
     private int mNumberOfMonths;
 
@@ -469,13 +471,18 @@ public class DatePicker extends FrameLayout {
      *
      * @param locale The current locale.
      */
-    private void setCurrentLocale(Locale locale) {
+    protected void setCurrentLocale(Locale locale) {
         if (locale.equals(mCurrentLocale)) {
             return;
         }
 
         mCurrentLocale = locale;
 
+	    // Update date formats.
+	    mDateFormat = new SimpleDateFormat(DATE_FORMAT, mCurrentLocale);
+	    mShortMonthFormat = new SimpleDateFormat(SHORT_MONTH_FORMAT, mCurrentLocale);
+
+	    // Update calendars.
         mTempDate = getCalendarForLocale(mTempDate, locale);
         mMinDate = getCalendarForLocale(mMinDate, locale);
         mMaxDate = getCalendarForLocale(mMaxDate, locale);
@@ -483,9 +490,9 @@ public class DatePicker extends FrameLayout {
 
         mNumberOfMonths = mTempDate.getActualMaximum(Calendar.MONTH) + 1;
         mShortMonths = new String[mNumberOfMonths];
-        for (int i = 0; i < mNumberOfMonths; i++) {
-            mShortMonths[i] = DateUtils.getMonthString(Calendar.JANUARY + i,
-                    DateUtils.LENGTH_MEDIUM);
+	    for (int i = 0; i < mNumberOfMonths; i++) {
+		    mTempDate.set(Calendar.MONTH, i);
+	        mShortMonths[i] = mShortMonthFormat.format(mTempDate.getTime());
         }
     }
 
