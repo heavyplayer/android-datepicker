@@ -490,6 +490,11 @@ public class DatePicker extends FrameLayout {
 
         mNumberOfMonths = mTempDate.getActualMaximum(Calendar.MONTH) + 1;
         mShortMonths = new String[mNumberOfMonths];
+
+	    // Avoid known bug.
+	    // If day of month is 30 (e.g.), setting month to 2 (February) will actually move date to month 3 (March).
+	    mTempDate.set(Calendar.DAY_OF_MONTH, 1);
+
 	    for (int i = 0; i < mNumberOfMonths; i++) {
 		    mTempDate.set(Calendar.MONTH, i);
 	        mShortMonths[i] = mShortMonthFormat.format(mTempDate.getTime());
