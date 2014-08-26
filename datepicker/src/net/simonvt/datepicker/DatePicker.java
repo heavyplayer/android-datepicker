@@ -525,7 +525,13 @@ public class DatePicker extends FrameLayout {
      */
     private void reorderSpinners() {
         mSpinners.removeAllViews();
-        char[] order = DateFormat.getDateFormatOrder(getContext());
+        char[] order;
+        try {
+            order = DateFormat.getDateFormatOrder(getContext());
+        } catch (IllegalArgumentException e) {
+            // Fall back for devices with broken date formats.
+            order = new char[] {'M', 'd', 'y'};
+        }
         final int spinnerCount = order.length;
         for (int i = 0; i < spinnerCount; i++) {
             switch (order[i]) {
