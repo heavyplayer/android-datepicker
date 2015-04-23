@@ -16,6 +16,9 @@
 
 package net.simonvt.datepicker;
 
+import net.simonvt.calendarview.CalendarView;
+import net.simonvt.numberpicker.NumberPicker;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -38,8 +41,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import net.simonvt.calendarview.CalendarView;
-import net.simonvt.numberpicker.NumberPicker;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -535,20 +536,21 @@ public class DatePicker extends FrameLayout {
         final int spinnerCount = order.length;
         for (int i = 0; i < spinnerCount; i++) {
             switch (order[i]) {
-                case DateFormat.DATE:
+                case 'd':
                     mSpinners.addView(mDaySpinner);
                     setImeOptions(mDaySpinner, spinnerCount, i);
                     break;
-                case DateFormat.MONTH:
+                case 'M':
                     mSpinners.addView(mMonthSpinner);
                     setImeOptions(mMonthSpinner, spinnerCount, i);
                     break;
-                case DateFormat.YEAR:
+                case 'y':
                     mSpinners.addView(mYearSpinner);
                     setImeOptions(mYearSpinner, spinnerCount, i);
                     break;
                 default:
-                    throw new IllegalArgumentException();
+                    // Ignore. Probably related to https://code.google.com/p/android/issues/detail?id=82144 and harmless
+                    // in this context.
             }
         }
     }
